@@ -28,7 +28,6 @@ def RandomArticle(categorymembers):
     subarticles = list(subarticles.values())
     return (random.choice(subarticles)).title
 
-# First the window layout in 2 columns
 category_list_column = [
     [
         sg.Text("Category"),
@@ -41,7 +40,7 @@ category_list_column = [
     ],
     [
         sg.Listbox(
-            values=[], enable_events=True, size=(40, 20), key="-FILE LIST-"
+            values=[], enable_events=True, size=(40, 20), key="-SUBCAT LIST-"
         )
     ],
     [
@@ -50,7 +49,7 @@ category_list_column = [
     ]
 ]
 
-# For now will only show the name of the file that was chosen
+
 text_viewer_column = [
     [sg.Text(size=(40, 1), key="-TOUT-")],
     [sg.Text(size=(40, 24), key="-DESCRIPTION-")],
@@ -58,7 +57,6 @@ text_viewer_column = [
     [sg.Text(size=(40,1), key="-LINK-")]
 ]
 
-# ----- Full layout -----
 layout = [
     [
         sg.Column(category_list_column),
@@ -70,14 +68,11 @@ layout = [
 window = sg.Window("Random Wikipedia Article", layout)
 wiki_wiki = wikipediaapi.Wikipedia('en')
 
-# Run the Event Loop
 while True:
     event, values = window.read()
     if event == "Exit" or event == sg.WIN_CLOSED:
         break
-    # Folder name was filled in, make a list of files in the folder
     if event == "Get":
-        #if event == "-CATEGORY-":
             mycat = [values["-CATEGORY-"]]
             ourpath = mycat[0]
             
@@ -88,17 +83,17 @@ while True:
             fnames = Titles(SubCategories(mycat.categorymembers))
             
             window["-CURRENT-"].update(ourpath)
-            window["-FILE LIST-"].update(fnames)
+            window["-SUBCAT LIST-"].update(fnames)
             
-    elif event == "-FILE LIST-":
-        mycat = values["-FILE LIST-"]
+    elif event == "-SUBCAT LIST-":
+        mycat = values["-SUBCAT LIST-"]
         ourpath = ourpath + ": " + mycat[0]
         
         window["-CURRENT-"].update(ourpath)
         
         newcat = wiki_wiki.page("Category:" + mycat[0])
         fnames = Titles(SubCategories(newcat.categorymembers))
-        window["-FILE LIST-"].update(fnames)
+        window["-SUBCAT LIST-"].update(fnames)
     
     elif event == "Go Back":
         try:
@@ -110,7 +105,7 @@ while True:
             fnames = Titles(SubCategories(mycat.categorymembers))
             
             window["-CURRENT-"].update(ourpath)
-            window["-FILE LIST-"].update(fnames)
+            window["-SUBCAT LIST-"].update(fnames)
         except:
             None
     
